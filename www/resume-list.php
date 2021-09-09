@@ -1,6 +1,7 @@
 <?php
 require_once 'base/header.php';
 require 'config.php';
+
 $resume = mysqli_query($connect, "SELECT * FROM `resume`");
 
 $search_count = mysqli_query($connect, "SELECT COUNT(*) as count FROM resume WHERE id");
@@ -79,6 +80,9 @@ $search_count = mysqli_fetch_all($search_count);
                             <p class="paragraph mb16 mobile-mb32"><?=$resumes['past_work']?></p>
                         </div>
                     </div>
+
+
+
                     <?php endwhile;?>
 
 

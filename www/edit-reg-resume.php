@@ -1,62 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php require 'base/header.php';
+require 'config.php';
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Создание нового резюме</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/main.css">
-    <script src="https://kit.fontawesome.com/a4e584b747.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/jquery.nselect.css">
-    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
-</head>
+$id = $_GET['id'];
 
-<body>
-<div class="main-wrapper">
-    <header class="header">
-        <div class="container">
-            <nav class="navbar navigation">
-                <a class="navbar-brand" href="#"><img src="images/logo.svg" alt="Logo">
-                </a>
-                <div class="header__login header__login-mobile">
-                </div>
-                <ul class="navigation-nav">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Резюме</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Мои резюме</a>
-                    </li>
-                </ul>
-                <div class="navigation-menu__mobile">
-                    <ul class="navigation-menu__mobile-nav">
-                        <div class="navigation-menu__mobile-nav-top">
-                            <li class="navigation-menu__mobile-nav-item active">
-                                <a class="nav-link" href="#">Резюме</a>
-                            </li>
-                            <li class="navigation-menu__mobile-nav-item">
-                                <a class="nav-link" href="#">Мои резюме</a>
-                            </li>
-                        </div>
-                    </ul>
-                </div>
-                <div class="navigation-toggler">
-                    <div class="bar1"></div>
-                    <div class="bar2"></div>
-                    <div class="bar3"></div>
-                </div>
-            </nav>
-        </div>
-    </header>
+$resume_id = $_GET['id'];
+$resume = mysqli_query($connect, "SELECT * FROM `resume` WHERE `id` = '$resume_id'");
+$resume = mysqli_fetch_assoc($resume);
 
+
+echo $id;
+
+
+?>
     <div class="content p-rel">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="mt8 mb40"><a href="#"><img src="images/blue-left-arrow.svg" alt="arrow"> Вернуться без
+                    <div class="mt8 mb40"><a href="my-resume.php"><img src="images/blue-left-arrow.svg" alt="arrow"> Вернуться без
                         сохранения</a>
                     </div>
                 </div>
@@ -68,12 +28,18 @@
             </div>
             <div class="col-12">
                 <form action="#">
+                    <input type="hidden" name="id" value="<?=$resume['id']?>">
                     <div class="row mb32">
                         <div class="col-lg-2 col-md-3 dflex-acenter">
                             <div class="paragraph">Фото</div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
-                            <div class="profile-foto-upload mb8"><img src="images/profile-foto.jpg" alt="foto">
+                            <div class="profile-foto-upload mb8">
+                                <?php if($resume['Image']):?>
+                                <img src="images/<?=$resume['Image']?>" alt="foto">
+                                <?php elseif(!$resume['Image']):?>
+                                <img src="images/profile-foto.jpg" alt="foto">
+                                <?php endif;?>
                             </div>
                             <label class="custom-file-upload">
                                 <input type="file"/>
@@ -86,15 +52,15 @@
                             <div class="paragraph">Фамилия</div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
-                            <input type="text" class="dor-input w100">
+                            <input type="text" name="last_name" value="<?=$resume['last_name']?>" class="dor-input w100">
                         </div>
                     </div>
                     <div class="row mb16">
                         <div class="col-lg-2 col-md-3 dflex-acenter">
-                            <div class="paragraph">Имя</div>
+                            <div class="paragraph">Имя </div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
-                            <input type="text" class="dor-input w100">
+                            <input type="text" value="<?=$resume['name']?>" name="name" class="dor-input w100">
                         </div>
                     </div>
                     <div class="row mb16">
@@ -102,7 +68,7 @@
                             <div class="paragraph">Отчество</div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
-                            <input type="text" class="dor-input w100">
+                            <input type="text" name="middle_name" value="<?=$resume['middle name']?>" class="dor-input w100">
                         </div>
                     </div>
                     <div class="row mb24">
@@ -111,7 +77,7 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
                             <div class="datepicker-wrap input-group date">
-                                <input type="text" class="dor-input dpicker datepicker-input">
+                                <input type="text" value="<?=$resume['birth']?>" class="dor-input dpicker datepicker-input">
                                 <img src="images/mdi_calendar_today.svg" alt="">
                             </div>
                         </div>
@@ -121,16 +87,19 @@
                             <div class="paragraph">Пол</div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
-                            <ul class="card-ul-radio profile-radio-list">
-                                <li>
-                                    <input type="radio" id="test1" name="radio-group" checked>
-                                    <label for="test1">Мужской</label>
-                                </li>
-                                <li>
-                                    <input type="radio" id="test2" name="radio-group">
-                                    <label for="test2">Женский</label>
-                                </li>
-                            </ul>
+
+                                <ul class="card-ul-radio profile-radio-list">
+                                    <li>
+                                        <input type="radio" id="test1" name="radio-group" checked>
+                                        <label for="test1">Мужской</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" id="test2" name="radio-group">
+                                        <label for="test2">Женский</label>
+                                    </li>
+
+                                </ul>
+
                         </div>
                     </div>
                     <div class="row mb16">
@@ -138,7 +107,7 @@
                             <div class="paragraph">Город проживания</div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
-                            <input type="text" class="dor-input w100">
+                            <input type="text" name="sity" value="<?=$resume['sity']?>" class="dor-input w100">
                         </div>
                     </div>
                     <div class="row mb16">
@@ -153,7 +122,7 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
                             <div class="p-rel">
-                                <input type="text" class="dor-input w100">
+                                <input type="email" name="email" value="<?=$resume['email']?>" class="dor-input w100">
                             </div>
                         </div>
                     </div>
@@ -163,7 +132,7 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
                             <div style="width: 140px;" class="p-rel mobile-w100">
-                                <input type="text" class="dor-input w100" placeholder="+7 ___ ___-__-__">
+                                <input type="text" class="dor-input w100" name="phone" value="<?=$resume['phone']?>" placeholder="+7 ___ ___-__-__">
                             </div>
                         </div>
                     </div>
@@ -193,7 +162,7 @@
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
                             <div class="p-rel">
-                                <input placeholder="От" type="text" class="dor-input w100">
+                                <input placeholder="От" value="<?=$resume['money']?>" type="text" class="dor-input w100">
                                 <img class="rub-icon" src="images/rub-icon.svg" alt="rub-icon">
                             </div>
                         </div>
@@ -284,19 +253,21 @@
                         <div class="col-lg-2 col-md-3">
                             <div class="paragraph">Опыт работы</div>
                         </div>
+                        <form action="" method="post"></form>
                         <div class="col-lg-3 col-md-4 col-11">
                             <ul class="card-ul-radio profile-radio-list">
                                 <li>
-                                    <input type="radio" id="test9131" name="radio-group3123" checked="">
+                                    <input value="netJob" type="radio" id="test9131" name="radio-group3123" checked="">
                                     <label for="test9131">Нет опыта работы</label>
                                 </li>
                                 <li>
-                                    <input type="radio" id="test10242" name="radio-group3123">
+                                    <input value="yesjob" type="radio" id="test10242" name="radio-group3123">
                                     <label for="test10242">Есть опыт работы</label>
                                 </li>
                             </ul>
                         </div>
                     </div>
+<!--                    start job-->
                     <div class="row mb24">
                         <div class="col-lg-2 col-md-3 dflex-acenter">
                             <div class="paragraph">Начало работы</div>
@@ -357,7 +328,7 @@
                             <div class="paragraph">Организация</div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
-                            <input type="text" class="dor-input w100">
+                            <input type="text" value="<?=$resume['organization']?>" class="dor-input w100">
                         </div>
                     </div>
                     <div class="row mb16">
@@ -365,7 +336,7 @@
                             <div class="paragraph">Должность</div>
                         </div>
                         <div class="col-lg-3 col-md-4 col-11">
-                            <input type="text" class="dor-input w100">
+                            <input type="text" value="<?=$resume['title']?>" class="dor-input w100">
                         </div>
                     </div>
                     <div class="row mb16">
@@ -374,7 +345,9 @@
                         </div>
                         <div class="col-lg-4 col-md-6 col-12">
                             <textarea class="dor-input w100 h96 mb8"
-                                      placeholder="Расскажите о своих обязанностях, функциях и достижениях"></textarea>
+                                      placeholder="Расскажите о своих обязанностях, функциях и достижениях">
+                                <?=$resume['responsibilities']?>
+                            </textarea>
                             <div><a href="#">Удалить место работы</a></div>
                         </div>
                     </div>
@@ -467,6 +440,7 @@
                             <div><a href="#">+ Добавить место работы</a></div>
                         </div>
                     </div>
+<!--                    end job-->
                     <div class="row mb32">
                         <div class="col-12">
                             <div class="heading">Расскажите о себе</div>
@@ -477,14 +451,16 @@
                             <div class="paragraph">О себе</div>
                         </div>
                         <div class="col-lg-5 col-md-7 col-12">
-                            <textarea class="dor-input w100 h176 mb8"></textarea>
+                            <textarea class="dor-input w100 h176 mb8">
+                                <?=$resume['aboyt']?>
+                            </textarea>
                         </div>
                     </div>
                     <div class="row mb128 mobile-mb64">
                         <div class="col-lg-2 col-md-3">
                         </div>
                         <div class="col-lg-10 col-md-9">
-                            <a href="#" class="orange-btn link-orange-btn">Сохранить</a>
+                            <a href="vendor/edit.php" type="submit" class="orange-btn link-orange-btn">Сохранить</a>
                         </div>
                     </div>
                 </form>
@@ -492,73 +468,4 @@
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer__wrap">
-                <div class="row">
-                    <div class="footer__col footer__policy col-lg-3 col-md-12 p-rel">
-                        <a class="footer__logo" href="#"><img src="images/logo.svg" alt="Logo"></a>
-                        <div class="footer__soc-icon">
-                            <a href="#"><img src="images/vk.png" alt="vk"></a>
-                            <a href="#"><img src="images/facebook.png" alt="facebook"></a>
-                            <a href="#"><img src="images/twitter.png" alt="twitter"></a>
-                            <a href="#"><img src="images/instagram.png" alt="instagram"></a>
-                        </div>
-                        <ul class="footer__ul-policy">
-                            <li><a href="#">Все права защищены</a></li>
-                            <li><a href="#">Политика конфиденциальности</a></li>
-                            <li><a href="#">Правила и условия</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer__col col-lg-3 col-md-12">
-                        <ul class="footer__ul">
-                            <li><a href="#">Компаниям</a></li>
-                            <li><a href="#">О компании</a></li>
-                            <li><a href="#">Наши вакансии</a></li>
-                            <li><a href="#">Защита персональных данных</a></li>
-                            <li><a href="#">Контакты</a></li>
-                            <li><a href="#">Помощь</a></li>
-                            <li><a href="#">Инвесторам</a></li>
-                            <li><a href="#">Партнерам</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer__col col-lg-3 col-md-12">
-                        <ul class="footer__ul">
-                            <li><a href="#">Соискателям</a></li>
-                            <li><a href="#">Готовое резюме</a></li>
-                            <li><a href="#">Продвижение резюме</a></li>
-                            <li><a href="#">Карьерный консультант</a></li>
-                            <li><a href="#">Автоподнятие резюме</a></li>
-                            <li><a href="#">Профориентация</a></li>
-                            <li><a href="#">Рассылка в агенства</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer__col col-lg-3 col-md-12">
-                        <ul class="footer__ul">
-                            <li><a href="#">Работодателям</a></li>
-                            <li><a href="#">База резюме</a></li>
-                            <li><a href="#">Кабинет для работодателя</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-</div>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-</script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-</script>
-<script src="js/main.js"></script>
-<script src="js/jquery.nselect.min.js"></script>
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="js/bootstrap-datepicker.ru.min.js"></script>
-<script src="js/jquery-editable-select.js"></script>
-</body>
-
-</html>
+<?php require 'base/footer.php' ?>
